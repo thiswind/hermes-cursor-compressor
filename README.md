@@ -66,6 +66,19 @@ cp -r hermes-cursor-compressor/cursor_style/ \
 # 3. Enable in Hermes Agent config (see Configuration below)
 ```
 
+## Uninstall
+
+```bash
+# One-click
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh) /path/to/hermes-agent
+
+# Or manually
+rm -rf /path/to/hermes-agent/plugins/context_engine/cursor_style
+```
+
+Then remove or change `context.engine` in your `cli-config.yaml`. Hermes Agent
+will fall back to the built-in compressor.
+
 ## Configuration
 
 Add to your `cli-config.yaml`:
