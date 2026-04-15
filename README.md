@@ -49,11 +49,11 @@ pip install tiktoken
 ### Option A: One-click install (recommended)
 
 ```bash
-# Default: installs to ~/.hermes (no arguments needed)
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh)
-
-# Or specify a custom Hermes Agent path
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh) /custom/path/to/hermes-agent
+# Download and run the install script
+curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh -o /tmp/install.sh
+bash /tmp/install.sh                    # default: ~/.hermes
+# bash /tmp/install.sh /custom/path     # custom Hermes path
+rm /tmp/install.sh
 ```
 
 ### Option B: Manual install
