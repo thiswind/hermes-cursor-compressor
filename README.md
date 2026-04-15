@@ -1,5 +1,7 @@
 # Cursor-Style Context Compression Engine for Hermes Agent
 
+**[English](README.md)** | **[中文](README.zh-CN.md)** | **[العربية](README.ar.md)**
+
 A drop-in plugin that replaces Hermes Agent's built-in ContextCompressor
 with a Cursor IDE-inspired approach.
 
