@@ -2,21 +2,19 @@
 # install.sh — Install cursor_style plugin into Hermes Agent
 #
 # Usage:
-#   bash install.sh /path/to/hermes-agent
-#   bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh) /path/to/hermes-agent
+#   bash install.sh                          # default: ~/.hermes
+#   bash install.sh /path/to/hermes-agent    # custom path
+#   bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh) [PATH]
 
 set -euo pipefail
 
-HERMES_DIR="${1:-}"
+HERMES_DIR="${1:-$HOME/.hermes}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-if [ -z "$HERMES_DIR" ]; then
-    echo "Usage: bash install.sh /path/to/hermes-agent"
-    exit 1
-fi
 
 if [ ! -d "$HERMES_DIR" ]; then
     echo "Error: $HERMES_DIR does not exist."
+    echo "Usage: bash install.sh [PATH_TO_HERMES]"
+    echo "  Default path: ~/.hermes"
     exit 1
 fi
 
@@ -41,7 +39,7 @@ echo "✓ cursor_style plugin installed to $PLUGIN_DIR"
 echo ""
 echo "Next steps:"
 echo "  1. Make sure tiktoken is installed: pip install tiktoken"
-echo "  2. Add to your cli-config.yaml:"
+echo "  2. Add to your cli-config.yaml ($HERMES_DIR/cli-config.yaml):"
 echo ""
 echo "     context:"
 echo "       engine: \"cursor_style\""

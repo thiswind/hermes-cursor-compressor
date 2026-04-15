@@ -2,17 +2,13 @@
 # uninstall.sh — Remove cursor_style plugin from Hermes Agent
 #
 # Usage:
-#   bash uninstall.sh /path/to/hermes-agent
-#   bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh) /path/to/hermes-agent
+#   bash uninstall.sh                          # default: ~/.hermes
+#   bash uninstall.sh /path/to/hermes-agent    # custom path
+#   bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh) [PATH]
 
 set -euo pipefail
 
-HERMES_DIR="${1:-}"
-
-if [ -z "$HERMES_DIR" ]; then
-    echo "Usage: bash uninstall.sh /path/to/hermes-agent"
-    exit 1
-fi
+HERMES_DIR="${1:-$HOME/.hermes}"
 
 PLUGIN_DIR="$HERMES_DIR/plugins/context_engine/cursor_style"
 
@@ -24,6 +20,6 @@ fi
 rm -rf "$PLUGIN_DIR"
 echo "✓ cursor_style plugin removed from $PLUGIN_DIR"
 echo ""
-echo "Note: Remember to update your cli-config.yaml:"
+echo "Note: Remember to update your cli-config.yaml ($HERMES_DIR/cli-config.yaml):"
 echo "  - Remove or change: context.engine: \"cursor_style\""
 echo "  - Hermes Agent will fall back to the built-in compressor"

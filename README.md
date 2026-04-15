@@ -37,6 +37,7 @@ Inspired by Cursor IDE's context management:
 
 - Python 3.9+
 - [Hermes Agent](https://github.com/NousResearch/hermes-agent/) installed
+  (default location: `~/.hermes`)
 - `tiktoken` (required for precise token counting):
 
 ```bash
@@ -45,12 +46,14 @@ pip install tiktoken
 
 ## Installation
 
-### Option A: One-click install script
+### Option A: One-click install (recommended)
 
 ```bash
-# Set HERMES_DIR to your Hermes Agent installation path
-HERMES_DIR=/path/to/hermes-agent
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh) $HERMES_DIR
+# Default: installs to ~/.hermes (no arguments needed)
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh)
+
+# Or specify a custom Hermes Agent path
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh) /custom/path/to/hermes-agent
 ```
 
 ### Option B: Manual install
@@ -60,8 +63,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compr
 git clone https://github.com/thiswind/hermes-cursor-compressor.git
 
 # 2. Copy the plugin to Hermes Agent's plugin directory
+#    (default: ~/.hermes/plugins/context_engine/cursor_style/)
 cp -r hermes-cursor-compressor/cursor_style/ \
-      /path/to/hermes-agent/plugins/context_engine/cursor_style/
+      ~/.hermes/plugins/context_engine/cursor_style/
 
 # 3. Enable in Hermes Agent config (see Configuration below)
 ```
@@ -69,11 +73,11 @@ cp -r hermes-cursor-compressor/cursor_style/ \
 ## Uninstall
 
 ```bash
-# One-click
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh) /path/to/hermes-agent
+# Default: removes from ~/.hermes
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh)
 
-# Or manually
-rm -rf /path/to/hermes-agent/plugins/context_engine/cursor_style
+# Or specify a custom path
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh) /custom/path/to/hermes-agent
 ```
 
 Then remove or change `context.engine` in your `cli-config.yaml`. Hermes Agent
@@ -81,7 +85,7 @@ will fall back to the built-in compressor.
 
 ## Configuration
 
-Add to your `cli-config.yaml`:
+Add to your `cli-config.yaml` (located at `~/.hermes/cli-config.yaml` by default):
 
 ```yaml
 context:
