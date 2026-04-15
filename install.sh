@@ -38,22 +38,10 @@ fi
 
 mkdir -p "$PLUGIN_DIR"
 
-# Detect whether running from a local clone or via curl
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-LOCAL_INIT="$SCRIPT_DIR/cursor_style/__init__.py"
-
-if [ -f "$LOCAL_INIT" ]; then
-    # Running from a local clone — copy files directly
-    for f in "${PLUGIN_FILES[@]}"; do
-        cp "$SCRIPT_DIR/$f" "$PLUGIN_DIR/"
-    done
-else
-    # Running via curl — download from GitHub
-    echo "Downloading plugin files from GitHub..."
-    for f in "${PLUGIN_FILES[@]}"; do
-        curl -fsSL "$BASE_URL/$f" -o "$PLUGIN_DIR/$(basename "$f")"
-    done
-fi
+echo "Downloading plugin files from GitHub..."
+for f in "${PLUGIN_FILES[@]}"; do
+    curl -fsSL "$BASE_URL/$f" -o "$PLUGIN_DIR/$(basename "$f")"
+done
 
 echo "✓ cursor_style plugin installed to $PLUGIN_DIR"
 echo ""
