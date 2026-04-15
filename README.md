@@ -1,4 +1,4 @@
-"""Cursor-Style Context Compression Engine for Hermes Agent
+# Cursor-Style Context Compression Engine for Hermes Agent
 
 A drop-in plugin that replaces Hermes Agent's built-in ContextCompressor
 with a Cursor IDE-inspired approach.
@@ -33,20 +33,37 @@ Inspired by Cursor IDE's context management:
 5. **Tool output pruning** — Old tool outputs are replaced with 1-line
    summaries before LLM summarization, reducing noise and cost.
 
+## Prerequisites
+
+- Python 3.9+
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent/) installed
+- `tiktoken` (required for precise token counting):
+
+```bash
+pip install tiktoken
+```
+
 ## Installation
+
+### Option A: One-click install script
+
+```bash
+# Set HERMES_DIR to your Hermes Agent installation path
+HERMES_DIR=/path/to/hermes-agent
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh) $HERMES_DIR
+```
+
+### Option B: Manual install
 
 ```bash
 # 1. Clone this repository
-git clone https://github.com/<your-username>/hermes-cursor-compressor.git
+git clone https://github.com/thiswind/hermes-cursor-compressor.git
 
 # 2. Copy the plugin to Hermes Agent's plugin directory
 cp -r hermes-cursor-compressor/cursor_style/ \
       /path/to/hermes-agent/plugins/context_engine/cursor_style/
 
-# 3. Enable in Hermes Agent config
-# Add to cli-config.yaml:
-#   context:
-#     engine: "cursor_style"
+# 3. Enable in Hermes Agent config (see Configuration below)
 ```
 
 ## Configuration
@@ -63,10 +80,10 @@ settings from Hermes Agent's main configuration.
 
 ### Optional: Summary Model Override
 
-To use a specific model for summarization (instead of the auxiliary model):
+By default, the engine uses Hermes Agent's auxiliary compression model
+(e.g. Gemini Flash). To override, configure via Hermes' `auxiliary.compression`:
 
 ```yaml
-# In the engine's __init__, or via Hermes' auxiliary.compression config:
 auxiliary:
   compression:
     model: "gemini-2.5-flash"
@@ -107,7 +124,7 @@ PYTHONPATH=.:/path/to/hermes-agent python -m pytest cursor_style/tests/ -v
 | Feature | Hermes Built-in | Cursor-Style |
 |---------|----------------|--------------|
 | Protected messages | 3 (system + initial exchange) | 1 (system only) |
-| Topic drift bug | Yes — initial request always visible | Fixed — all对话平等压缩 |
+| Topic drift bug | Yes — initial request always visible | Fixed — all messages compressed equally |
 | Summary prompt | 11-section structured template | Minimal (~1000 tokens) |
 | Token estimation | `len(text)//4` (bad for CJK) | tiktoken cl100k_base |
 | History file | No | Yes (JSONL, searchable) |
