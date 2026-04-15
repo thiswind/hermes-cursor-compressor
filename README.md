@@ -46,55 +46,24 @@ pip install tiktoken
 
 ## Installation
 
-### Option A: One-click install (recommended)
-
 ```bash
-# Download and run the install script
-curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh -o /tmp/install.sh
-bash /tmp/install.sh                    # default: ~/.hermes
-# bash /tmp/install.sh /custom/path     # custom Hermes path
-rm /tmp/install.sh
-```
-
-### Option B: Manual install
-
-```bash
-# 1. Clone this repository
+# 1. Install plugin
 git clone https://github.com/thiswind/hermes-cursor-compressor.git
+cp -r hermes-cursor-compressor/cursor_style/ ~/.hermes/plugins/context_engine/cursor_style/
 
-# 2. Copy the plugin to Hermes Agent's plugin directory
-#    (default: ~/.hermes/plugins/context_engine/cursor_style/)
-cp -r hermes-cursor-compressor/cursor_style/ \
-      ~/.hermes/plugins/context_engine/cursor_style/
+# 2. Enable in ~/.hermes/config.yaml — add these 2 lines:
+#    context:
+#      engine: "cursor_style"
 
-# 3. Enable in Hermes Agent config (see Configuration below)
+# 3. Restart Hermes Agent
 ```
 
 ## Uninstall
 
 ```bash
-# Default: removes from ~/.hermes
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh)
-
-# Or specify a custom path
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh) /custom/path/to/hermes-agent
+rm -rf ~/.hermes/plugins/context_engine/cursor_style
+# Then remove "context.engine: cursor_style" from ~/.hermes/config.yaml
 ```
-
-Then remove or change `context.engine` in your `cli-config.yaml`. Hermes Agent
-will fall back to the built-in compressor.
-
-## Configuration
-
-Add to your `~/.hermes/config.yaml` (this is the single config file shared
-by all channels — CLI, Feishu, Discord, Telegram, etc.):
-
-```yaml
-context:
-  engine: "cursor_style"
-```
-
-No other configuration is required. The engine inherits model/provider
-settings from Hermes Agent's main configuration.
 
 ### Optional: Summary Model Override
 
