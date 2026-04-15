@@ -85,7 +85,8 @@ will fall back to the built-in compressor.
 
 ## Configuration
 
-Add to your `cli-config.yaml` (located at `~/.hermes/cli-config.yaml` by default):
+Add to your `~/.hermes/config.yaml` (this is the single config file shared
+by all channels — CLI, Feishu, Discord, Telegram, etc.):
 
 ```yaml
 context:
