@@ -59,11 +59,49 @@ done
 
 echo "✓ cursor_style plugin installed to $PLUGIN_DIR"
 echo ""
-echo "Next steps:"
-echo "  1. Make sure tiktoken is installed: pip install tiktoken"
-echo "  2. Add to your config.yaml ($HERMES_DIR/config.yaml):"
+
+# Install tiktoken dependency
+echo "Installing tiktoken dependency..."
+pip install tiktoken >/dev/null 2>&1 || pip3 install tiktoken >/dev/null 2>&1
+echo "✓ tiktoken installed"
+
+# Update config.yaml
+echo "Updating config.yaml..."
+CONFIG_FILE="$HERMES_DIR/config.yaml"
+
+# Check if config.yaml exists
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "Error: $CONFIG_FILE does not exist."
+    echo "Please create the config file first."
+    exit 1
+fi
+
+# Check if context section exists
+if grep -q "^context:" "$CONFIG_FILE"; then
+    # Check if engine is already set
+    if grep -q "^context:\s*$" "$CONFIG_FILE" -A 1 | grep -q "engine:"; then
+        # Update existing engine setting
+        sed -i 's/^\s*engine:\s*.*/  engine: "cursor_style"/' "$CONFIG_FILE"
+    else
+        # Add engine to existing context section
+        sed -i '/^context:/a \  engine: "cursor_style"' "$CONFIG_FILE"
+    fi
+else
+    # Add context section
+    echo -e "\ncontext:\n  engine: \"cursor_style\"" >> "$CONFIG_FILE"
+fi
+echo "✓ config.yaml updated"
+
+# Restart Hermes Agent gateway
+echo "Restarting Hermes Agent gateway..."
+# Check if hermes gateway is running and restart it
+if command -v hermes &> /dev/null; then
+    hermes gateway restart >/dev/null 2>&1 || echo "Note: Could not restart gateway automatically. Please restart it manually."
+elif [ -f "$HERMES_DIR/bin/hermes" ]; then
+    "$HERMES_DIR/bin/hermes" gateway restart >/dev/null 2>&1 || echo "Note: Could not restart gateway automatically. Please restart it manually."
+else
+    echo "Note: Could not find hermes command. Please restart the gateway manually."
+fi
 echo ""
-echo "     context:"
-echo "       engine: \"cursor_style\""
-echo ""
-echo "  3. Restart Hermes Agent"
+echo "✓ Installation complete!"
+echo "Cursor-style context compression engine is now active."
