@@ -39,10 +39,10 @@ pip install tiktoken
 
 ```bash
 # 运行安装脚本
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh)
+python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.py)
 
 # 或者如果你已经克隆了仓库
-bash install.sh
+python install.py
 ```
 
 脚本会：
@@ -74,10 +74,10 @@ pip install tiktoken
 
 ```bash
 # 运行卸载脚本
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh)
+python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.py)
 
 # 或者如果你已经克隆了仓库
-bash uninstall.sh
+python uninstall.py
 ```
 
 脚本会：

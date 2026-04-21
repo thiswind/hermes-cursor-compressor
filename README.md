@@ -52,10 +52,10 @@ pip install tiktoken
 
 ```bash
 # Run the install script
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh)
+python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.py)
 
 # Or if you have the repo cloned locally
-bash install.sh
+python install.py
 ```
 
 The script will:
@@ -87,10 +87,10 @@ pip install tiktoken
 
 ```bash
 # Run the uninstall script
-bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh)
+python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.py)
 
 # Or if you have the repo cloned locally
-bash uninstall.sh
+python uninstall.py
 ```
 
 The script will:
