@@ -48,23 +48,62 @@ pip install tiktoken
 
 ## Installation
 
+### Automatic Installation (Recommended)
+
+```bash
+# Run the install script
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh)
+
+# Or if you have the repo cloned locally
+bash install.sh
+```
+
+The script will:
+1. Install the plugin files
+2. Install tiktoken dependency
+3. Update your config.yaml automatically
+4. Restart Hermes Agent gateway
+
+### Manual Installation
+
 ```bash
 # 1. Install plugin
 git clone https://github.com/thiswind/hermes-cursor-compressor.git
 cp -r hermes-cursor-compressor/cursor_style/ ~/.hermes/plugins/context_engine/cursor_style/
 
-# 2. Enable in ~/.hermes/config.yaml — add these 2 lines:
+# 2. Install tiktoken
+pip install tiktoken
+
+# 3. Enable in ~/.hermes/config.yaml — add these 2 lines:
 #    context:
 #      engine: "cursor_style"
 
-# 3. Restart Hermes Agent
+# 4. Restart Hermes Agent
 ```
 
 ## Uninstall
 
+### Automatic Uninstallation (Recommended)
+
+```bash
+# Run the uninstall script
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh)
+
+# Or if you have the repo cloned locally
+bash uninstall.sh
+```
+
+The script will:
+1. Remove the plugin files
+2. Update your config.yaml automatically
+3. Restart Hermes Agent gateway
+
+### Manual Uninstallation
+
 ```bash
 rm -rf ~/.hermes/plugins/context_engine/cursor_style
 # Then remove "context.engine: cursor_style" from ~/.hermes/config.yaml
+# Restart Hermes Agent
 ```
 
 ### Optional: Summary Model Override

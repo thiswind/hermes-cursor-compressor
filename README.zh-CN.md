@@ -35,23 +35,62 @@ pip install tiktoken
 
 ## 安装
 
+### 自动安装（推荐）
+
+```bash
+# 运行安装脚本
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.sh)
+
+# 或者如果你已经克隆了仓库
+bash install.sh
+```
+
+脚本会：
+1. 安装插件文件
+2. 安装 tiktoken 依赖
+3. 自动更新你的 config.yaml
+4. 重启 Hermes Agent gateway
+
+### 手动安装
+
 ```bash
 # 1. 安装插件
 git clone https://github.com/thiswind/hermes-cursor-compressor.git
 cp -r hermes-cursor-compressor/cursor_style/ ~/.hermes/plugins/context_engine/cursor_style/
 
-# 2. 在 ~/.hermes/config.yaml 中添加以下 2 行：
+# 2. 安装 tiktoken
+pip install tiktoken
+
+# 3. 在 ~/.hermes/config.yaml 中添加以下 2 行：
 #    context:
 #      engine: "cursor_style"
 
-# 3. 重启 Hermes Agent
+# 4. 重启 Hermes Agent
 ```
 
 ## 卸载
 
+### 自动卸载（推荐）
+
+```bash
+# 运行卸载脚本
+bash <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.sh)
+
+# 或者如果你已经克隆了仓库
+bash uninstall.sh
+```
+
+脚本会：
+1. 删除插件文件
+2. 自动更新你的 config.yaml
+3. 重启 Hermes Agent gateway
+
+### 手动卸载
+
 ```bash
 rm -rf ~/.hermes/plugins/context_engine/cursor_style
 # 然后从 ~/.hermes/config.yaml 中删除 "context.engine: cursor_style"
+# 重启 Hermes Agent
 ```
 
 ### 可选：自定义摘要模型
