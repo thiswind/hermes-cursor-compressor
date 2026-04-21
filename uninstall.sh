@@ -20,6 +20,6 @@ fi
 rm -rf "$PLUGIN_DIR"
 echo "✓ cursor_style plugin removed from $PLUGIN_DIR"
 echo ""
-echo "Note: Remember to update your cli-config.yaml ($HERMES_DIR/cli-config.yaml):"
+echo "Note: Remember to update your config.yaml ($HERMES_DIR/config.yaml):"
 echo "  - Remove or change: context.engine: \"cursor_style\""
 echo "  - Hermes Agent will fall back to the built-in compressor"
