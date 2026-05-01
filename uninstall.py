@@ -23,7 +23,7 @@ def main():
     else:
         hermes_dir = os.path.expanduser("~/.hermes")
 
-    plugin_dir = os.path.join(hermes_dir, "plugins", "context_engine", "cursor_style")
+    plugin_dir = os.path.join(hermes_dir, "hermes-agent", "plugins", "context_engine", "cursor_style")
 
     # Check if plugin is installed
     if not os.path.exists(plugin_dir):

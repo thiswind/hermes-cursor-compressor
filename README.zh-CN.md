@@ -25,20 +25,19 @@ Hermes Agent 内置的上下文压缩器有一个严重 bug：它会永久保留
 ## 前置要求
 
 - Python 3.9+
-- 已安装 [Hermes Agent](https://github.com/NousResearch/hermes-agent/)
-  （默认位置：`~/.hermes`）
+- 已安装 Hermes Agent（默认位置：`~/.hermes`）
 - `tiktoken`（精确 token 计算所需）：
 
-```bash
-pip install tiktoken
-```
+  ```bash
+  pip install tiktoken
+  ```
 
 ## 安装
 
 ### 自动安装（推荐）
 
 ```bash
-# 运行安装脚本
+# 直接运行安装脚本
 python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.py)
 
 # 或者如果你已经克隆了仓库
@@ -46,26 +45,57 @@ python install.py
 ```
 
 脚本会：
-1. 安装插件文件
+1. 将插件文件安装到正确位置
 2. 安装 tiktoken 依赖
-3. 自动更新你的 config.yaml
+3. 自动更新你的 `config.yaml`
 4. 重启 Hermes Agent gateway
 
 ### 手动安装
 
 ```bash
-# 1. 安装插件
+# 1. 克隆仓库
 git clone https://github.com/thiswind/hermes-cursor-compressor.git
-cp -r hermes-cursor-compressor/cursor_style/ ~/.hermes/plugins/context_engine/cursor_style/
 
-# 2. 安装 tiktoken
+# 2. 将插件文件复制到正确位置（重要：hermes-agent 子目录）
+cp -r hermes-cursor-compressor/cursor_style/ ~/.hermes/hermes-agent/plugins/context_engine/cursor_style/
+
+# 3. 安装 tiktoken
 pip install tiktoken
 
-# 3. 在 ~/.hermes/config.yaml 中添加以下 2 行：
+# 4. 在 ~/.hermes/config.yaml 中添加:
 #    context:
 #      engine: "cursor_style"
 
-# 4. 重启 Hermes Agent
+# 5. 重启 Hermes Agent
+hermes gateway restart
+```
+
+### 验证安装
+
+安装完成后，验证引擎是否正确加载：
+
+```bash
+cd ~/.hermes/hermes-agent
+python -c "
+from plugins.context_engine import discover_context_engines, load_context_engine
+print('可用的引擎:')
+for name, desc, avail in discover_context_engines():
+    print(f'  - {name}: {\"✅ 可用\" if avail else \"❌ 不可用\"}')
+
+engine = load_context_engine('cursor_style')
+if engine:
+    print('\\n✅ cursor_style 引擎加载成功！')
+else:
+    print('\\n❌ cursor_style 引擎加载失败')
+"
+```
+
+你应该看到：
+```
+可用的引擎:
+  - cursor_style: ✅ 可用
+
+✅ cursor_style 引擎加载成功！
 ```
 
 ## 卸载
@@ -73,27 +103,22 @@ pip install tiktoken
 ### 自动卸载（推荐）
 
 ```bash
-# 运行卸载脚本
+# 直接运行卸载脚本
 python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.py)
 
 # 或者如果你已经克隆了仓库
 python uninstall.py
 ```
 
-脚本会：
-1. 删除插件文件
-2. 自动更新你的 config.yaml
-3. 重启 Hermes Agent gateway
-
 ### 手动卸载
 
 ```bash
-rm -rf ~/.hermes/plugins/context_engine/cursor_style
+rm -rf ~/.hermes/hermes-agent/plugins/context_engine/cursor_style
 # 然后从 ~/.hermes/config.yaml 中删除 "context.engine: cursor_style"
 # 重启 Hermes Agent
 ```
 
-### 可选：自定义摘要模型
+## 可选：自定义摘要模型
 
 默认使用 Hermes Agent 的辅助压缩模型（如 Gemini Flash）。如需覆盖，通过 `auxiliary.compression` 配置：
 
@@ -109,7 +134,7 @@ auxiliary:
 
 ```
 cursor_style/
-├── __init__.py          # 包初始化、版本号
+├── __init__.py          # 包初始化 + register 函数导出
 ├── plugin.yaml          # 插件元数据
 ├── engine.py            # CursorStyleEngine（ContextEngine ABC 实现）
 ├── token_counter.py     # 精确多语言 token 计算（tiktoken）
@@ -139,11 +164,51 @@ PYTHONPATH=.:/path/to/hermes-agent python -m pytest cursor_style/tests/ -v
 |------|------------|------------|
 | 受保护消息 | 3 条（系统提示 + 初始对话） | 1 条（仅系统提示） |
 | 话题漂移 bug | 有 — 初始请求永远可见 | 已修复 — 所有消息平等压缩 |
-| 摘要提示词 | 11 段结构化模板 | 极简（约 1000 token） |
+| 摘要提示词 | 11 段结构化模板 | 极简（约 1000 token 输出） |
 | Token 估算 | `len(text)//4`（对 CJK 不准确） | tiktoken cl100k_base |
 | 历史文件 | 无 | 有（JSONL，可搜索） |
 | 摘要输出 | 约 5000 token | 约 1000 token |
 | 触发阈值 | 上下文的 50% | 上下文的 50% |
+
+## Troubleshooting
+
+### 引擎加载失败
+
+如果安装后引擎无法加载：
+
+1. 确认文件在正确位置：
+   ```bash
+   ls -la ~/.hermes/hermes-agent/plugins/context_engine/cursor_style/
+   ```
+
+2. 确认 `__init__.py` 导出了 `register` 函数
+
+3. 重启 Hermes Gateway：
+   ```bash
+   hermes gateway restart
+   ```
+
+4. 查看日志：
+   ```bash
+   hermes logs --level ERROR
+   ```
+
+### 配置问题
+
+如果你的 `config.yaml` 中有重复的 `engine` 键：
+
+```yaml
+# ❌ 错误（重复键）
+context:
+  engine: "cursor_style"
+  engine: compressor
+
+# ✅ 正确
+context:
+  engine: "cursor_style"
+```
+
+最新的 `install.py` 已修复此问题。
 
 ## 许可证
 

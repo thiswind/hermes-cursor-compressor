@@ -20,15 +20,15 @@ import logging
 import time
 from typing import Any, Dict, List, Optional
 
-from cursor_style.token_counter import count_messages_tokens
-from cursor_style.history_file import HistoryFileManager
-from cursor_style.summarizer import Summarizer
+from .token_counter import count_messages_tokens
+from .history_file import HistoryFileManager
+from .summarizer import Summarizer
 
 # Use stub for standalone, real ABC when installed as plugin
 try:
     from agent.context_engine import ContextEngine
 except ImportError:
-    from cursor_style.tests.stubs.context_engine import ContextEngine
+    from .tests.stubs.context_engine import ContextEngine
 
 logger = logging.getLogger(__name__)
 

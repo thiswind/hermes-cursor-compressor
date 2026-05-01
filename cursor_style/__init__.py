@@ -16,3 +16,8 @@ Installation:
 """
 
 __version__ = "0.1.0"
+
+# Export register function for Hermes plugin system
+from .engine import register
+
+__all__ = ["register"]

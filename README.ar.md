@@ -48,23 +48,88 @@ pip install tiktoken
 
 ## التثبيت
 
-```bash
-# 1. تثبيت الإضافة
-git clone https://github.com/thiswind/hermes-cursor-compressor.git
-cp -r hermes-cursor-compressor/cursor_style/ ~/.hermes/plugins/context_engine/cursor_style/
+### التثبيت التلقائي (موصى به)
 
-# 2. تفعيل في ~/.hermes/config.yaml — أضف السطرين التاليين:
+```bash
+# تشغيل سكريبت التثبيت مباشرة
+python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/install.py)
+
+# أو إذا قمت باستنساخ المستودع مسبقاً
+python install.py
+```
+
+سيقوم السكريبت بـ:
+1. تثبيت ملفات الإضافة في الموقع الصحيح
+2. تثبيت تبعية tiktoken
+3. تحديث `config.yaml` تلقائياً
+4. إعادة تشغيل بوابة Hermes Agent
+
+### التثبيت اليدوي
+
+```bash
+# 1. استنساخ المستودع
+git clone https://github.com/thiswind/hermes-cursor-compressor.git
+
+# 2. نسخ ملفات الإضافة إلى الموقع الصحيح (مهم: الدليل الفرعي hermes-agent)
+cp -r hermes-cursor-compressor/cursor_style/ ~/.hermes/hermes-agent/plugins/context_engine/cursor_style/
+
+# 3. تثبيت tiktoken
+pip install tiktoken
+
+# 4. في ~/.hermes/config.yaml أضف:
 #    context:
 #      engine: "cursor_style"
 
-# 3. أعد تشغيل Hermes Agent
+# 5. أعد تشغيل Hermes Agent
+hermes gateway restart
+```
+
+### التحقق من التثبيت
+
+بعد التثبيت، تحقق من تحميل المحرك بشكل صحيح:
+
+```bash
+cd ~/.hermes/hermes-agent
+python -c "
+from plugins.context_engine import discover_context_engines, load_context_engine
+print('المحركات المتاحة:')
+for name, desc, avail in discover_context_engines():
+    print(f'  - {name}: {\"✅ متاح\" if avail else \"❌ غير متاح\"}')
+
+engine = load_context_engine('cursor_style')
+if engine:
+    print('\\n✅ تم تحميل محرك cursor_style بنجاح!')
+else:
+    print('\\n❌ فشل تحميل محرك cursor_style')
+"
+```
+
+يجب أن ترى:
+```
+المحركات المتاحة:
+  - cursor_style: ✅ متاح
+
+✅ تم تحميل محرك cursor_style بنجاح!
 ```
 
 ## إلغاء التثبيت
 
+### إلغاء التثبيت التلقائي (موصى به)
+
 ```bash
-rm -rf ~/.hermes/plugins/context_engine/cursor_style
+# تشغيل سكريبت الإلغاء مباشرة
+python <(curl -fsSL https://raw.githubusercontent.com/thiswind/hermes-cursor-compressor/main/uninstall.py)
+
+# أو إذا قمت باستنساخ المستودع مسبقاً
+python uninstall.py
+```
+
+### إلغاء التثبيت اليدوي
+
+```bash
+rm -rf ~/.hermes/hermes-agent/plugins/context_engine/cursor_style
 # ثم احذف "context.engine: cursor_style" من ~/.hermes/config.yaml
+# أعد تشغيل Hermes Agent
 ```
 
 ### اختياري: تجاوز نموذج التلخيص
@@ -84,7 +149,7 @@ auxiliary:
 
 ```
 cursor_style/
-├── __init__.py          # تهيئة الحزمة، رقم الإصدار
+├── __init__.py          # تهيئة الحزمة + تصدير دالة register
 ├── plugin.yaml          # بيانات الإضافة الوصفية
 ├── engine.py            # CursorStyleEngine (تطبيق ContextEngine ABC)
 ├── token_counter.py     # حساب دقيق متعدد اللغات للرموز (tiktoken)
@@ -119,6 +184,46 @@ PYTHONPATH=.:/path/to/hermes-agent python -m pytest cursor_style/tests/ -v
 | ملف التاريخ | لا | نعم (JSONL، قابل للبحث) |
 | مخرجات التلخيص | ~5000 رمز | ~1000 رمز |
 | عتبة التشغيل | 50% من السياق | 50% من السياق |
+
+## استكشاف الأخطاء وإصلاحها
+
+### فشل تحميل المحرك
+
+إذا فشل تحميل المحرك بعد التثبيت:
+
+1. تأكد من وجود الملفات في الموقع الصحيح:
+   ```bash
+   ls -la ~/.hermes/hermes-agent/plugins/context_engine/cursor_style/
+   ```
+
+2. تأكد من أن `__init__.py` يصدّر دالة `register`
+
+3. أعد تشغيل بوابة Hermes:
+   ```bash
+   hermes gateway restart
+   ```
+
+4. تحقق من السجلات:
+   ```bash
+   hermes logs --level ERROR
+   ```
+
+### مشاكل في التكوين
+
+إذا رأيت مفاتيح `engine` مكررة في `config.yaml`:
+
+```yaml
+# ❌ خطأ (مفاتيح مكررة)
+context:
+  engine: "cursor_style"
+  engine: compressor
+
+# ✅ صحيح
+context:
+  engine: "cursor_style"
+```
+
+تم إصلاح هذه المشكلة في أحدث نسخة من `install.py`.
 
 ## الترخيص
 

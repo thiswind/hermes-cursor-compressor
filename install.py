@@ -43,7 +43,7 @@ def main():
         print("  Default path: ~/.hermes")
         sys.exit(1)
 
-    plugin_dir = os.path.join(hermes_dir, "plugins", "context_engine", "cursor_style")
+    plugin_dir = os.path.join(hermes_dir, "hermes-agent", "plugins", "context_engine", "cursor_style")
 
     # Create temp directory
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -104,14 +104,22 @@ def main():
         config_content = f.read()
 
     # Check if context section exists
-    if re.search(r'^context:', config_content, re.MULTILINE):
-        # Check if engine is already set
-        if re.search(r'^context:\s*$[^\n]*engine:', config_content, re.MULTILINE | re.DOTALL):
-            # Update existing engine setting
-            new_config = re.sub(r'(^\s*engine:\s*).*', r'\1"cursor_style"', config_content, flags=re.MULTILINE)
-        else:
-            # Add engine to existing context section
-            new_config = re.sub(r'^context:', r'context:\n  engine: "cursor_style"', config_content, flags=re.MULTILINE)
+    if re.search(r'^context:\s*$\n\s*engine:', config_content, re.MULTILINE):
+        # Replace existing engine setting under context section
+        new_config = re.sub(
+            r'(^context:\s*$\n\s*)engine:\s*.*',
+            r'\1engine: "cursor_style"',
+            config_content,
+            flags=re.MULTILINE
+        )
+    elif re.search(r'^context:', config_content, re.MULTILINE):
+        # Add engine to existing context section
+        new_config = re.sub(
+            r'^context:',
+            'context:\n  engine: "cursor_style"',
+            config_content,
+            flags=re.MULTILINE
+        )
     else:
         # Add context section
         new_config = config_content + '\n\ncontext:\n  engine: "cursor_style"'
