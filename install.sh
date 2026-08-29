@@ -60,10 +60,14 @@ done
 echo "✓ cursor_style plugin installed to $PLUGIN_DIR"
 echo ""
 
-# Install tiktoken dependency
-echo "Installing tiktoken dependency..."
-pip install tiktoken >/dev/null 2>&1 || pip3 install tiktoken >/dev/null 2>&1
-echo "✓ tiktoken installed"
+# Install Python dependencies (tiktoken for exact token counts)
+echo "Installing Python dependencies..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if pip install -r "$SCRIPT_DIR/requirements.txt" >/dev/null 2>&1 || pip3 install -r "$SCRIPT_DIR/requirements.txt" >/dev/null 2>&1; then
+    echo "✓ dependencies installed"
+else
+    echo "Note: Failed to install dependencies. Please run: pip install -r requirements.txt"
+fi
 
 # Update config.yaml
 echo "Updating config.yaml..."
