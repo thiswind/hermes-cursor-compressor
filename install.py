@@ -81,13 +81,14 @@ def main():
     print(f"✓ cursor_style plugin installed to {plugin_dir}")
     print()
 
-    # Install tiktoken dependency
-    print("Installing tiktoken dependency...")
+    # Install Python dependencies (tiktoken for exact token counts)
+    print("Installing Python dependencies...")
+    req_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
     try:
-        subprocess.run([sys.executable, "-m", "pip", "install", "tiktoken"], check=True, capture_output=True)
-        print("✓ tiktoken installed")
+        subprocess.run([sys.executable, "-m", "pip", "install", "-r", req_file], check=True, capture_output=True)
+        print("✓ dependencies installed")
     except subprocess.CalledProcessError:
-        print("Note: Failed to install tiktoken. Please install it manually with 'pip install tiktoken'")
+        print(f"Note: Failed to install dependencies. Please run: pip install -r {req_file}")
 
     # Update config.yaml
     print("Updating config.yaml...")

@@ -1,0 +1,9 @@
+# cursor_style context engine dependencies
+# Installed automatically by install.sh / install.py (pip install -r requirements.txt)
+#
+# tiktoken: exact token counts for the compressor threshold math.
+#           Without it the engine falls back to a chars-per-token heuristic
+#           (CJK-aware, but less precise). Optional at runtime — the plugin
+#           imports it lazily and degrades gracefully — but recommended so
+#           compression triggers at the right point instead of too late.
+tiktoken>=0.7,<1
