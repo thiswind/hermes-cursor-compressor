@@ -43,6 +43,18 @@ Hermes Agent’s built-in compressor permanently anchors the **first 3 messages*
 
 ---
 
+## Project status
+
+**Actively maintained.** The engine is stable and in daily production use; the core algorithm has not needed to change since its design — it already matches the patterns the major coding agents converged on in 2025–2026 (summary + separately re-injected durable state, tool-output pruning with archive references, token-exact thresholds). What does change: dependency bounds, test coverage, and installer reliability. 65 unit tests, CI on Python 3.10–3.12.
+
+The same engine ships built into the [JOHOR Agent](https://github.com/thiswind/johor) distribution; this repo remains the canonical upstream home for anyone running Hermes Agent.
+
+### Changelog
+
+- **2026-11** — Test suite (65 unit tests) added to the repo with a standalone stub layer (no Hermes install needed to run); GitHub Actions CI; `requirements.txt` with installers routed through it.
+
+---
+
 ## Prerequisites
 
 - Python 3.9+

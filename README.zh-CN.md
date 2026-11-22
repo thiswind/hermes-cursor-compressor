@@ -170,6 +170,16 @@ PYTHONPATH=.:/path/to/hermes-agent python -m pytest cursor_style/tests/ -v
 | 摘要输出 | 约 5000 token | 约 1000 token |
 | 触发阈值 | 上下文的 50% | 上下文的 50% |
 
+## 项目状态
+
+**持续维护中。** 引擎稳定，每日在生产环境运行；核心算法自定稿以来无需改动——它已经与 2025–2026 年主流编程智能体收敛出的模式一致（摘要 + 独立恢复的持久状态、带档案引用的工具输出剪枝、精确 token 阈值）。持续变化的是依赖版本边界、测试覆盖与安装器可靠性。65 个单元测试，CI 覆盖 Python 3.10–3.12。
+
+同一引擎也内置于 [JOHOR Agent](https://github.com/thiswind/johor) 发行版；本仓库始终是运行 Hermes Agent 用户的上游权威源。
+
+### 变更记录
+
+- **2026-11** — 测试套件（65 个单元测试）随独立 stub 层入库（无需安装 Hermes 即可运行）；GitHub Actions CI；新增 `requirements.txt` 并让安装器统一走它。
+
 ## Troubleshooting
 
 ### 引擎加载失败

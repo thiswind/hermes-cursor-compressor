@@ -13,3 +13,4 @@ build/
 *.swp
 *.swo
 *~
+.retired_refs/
